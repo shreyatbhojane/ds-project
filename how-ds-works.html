@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Data Structures Power TaskFlow — Structura Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================================================
+           TASKFLOW UNIFIED DESIGN SYSTEM — LIGHT & DARK THEME ONLY
+           ========================================================================= */
+        :root {
+            --bg-page: #F3F4F8;
+            --bg-card: #FFFFFF;
+            --bg-card-subtle: #F8FAFC;
+            --bg-code: #0F172A;
+            --text-code: #E2E8F0;
+            --border-color: #E2E8F0;
+            --border-hover: #CBD5E1;
+
+            --text-heading: #0F172A;
+            --text-body: #475569;
+            --text-muted: #64748B;
+            --text-dim: #94A3B8;
+
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --primary-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+            --headline-gradient: linear-gradient(135deg, #4F46E5, #8B5CF6);
+
+            --accent-study: #3B82F6;
+            --accent-study-bg: #EFF6FF;
+            --accent-college: #F59E0B;
+            --accent-college-bg: #FEF3C7;
+            --accent-project: #10B981;
+            --accent-project-bg: #ECFDF5;
+            --accent-personal: #EC4899;
+            --accent-personal-bg: #FDF2F8;
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 12px 30px -4px rgba(79, 70, 229, 0.08), 0 8px 16px -4px rgba(0, 0, 0, 0.04);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-pill: 9999px;
+        }
+
+        [data-theme="dark"] {
+            --bg-page: #0B0F19;
+            --bg-card: #131B2E;
+            --bg-card-subtle: #182238;
+            --bg-code: #080D1A;
+            --text-code: #CBD5E1;
+            --border-color: #23304A;
+            --border-hover: #334466;
+
+            --text-heading: #F8FAFC;
+            --text-body: #CBD5E1;
+            --text-muted: #94A3B8;
+            --text-dim: #64748B;
+
+            --primary: #6366F1;
+            --primary-hover: #4F46E5;
+            --primary-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+            --headline-gradient: linear-gradient(135deg, #818CF8, #C084FC);
+
+            --accent-study: #60A5FA;
+            --accent-study-bg: rgba(59, 130, 246, 0.15);
+            --accent-college: #FBBF24;
+            --accent-college-bg: rgba(245, 158, 11, 0.15);
+            --accent-project: #34D399;
+            --accent-project-bg: rgba(16, 185, 129, 0.15);
+            --accent-personal: #F472B6;
+            --accent-personal-bg: rgba(236, 72, 153, 0.15);
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 12px 30px -4px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            min-height: 100vh;
+            padding: 24px 20px 60px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 10% 90%, rgba(236, 72, 153, 0.03) 0%, transparent 40%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        /* Top Nav Row */
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .brand-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-heading);
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .brand-icon {
+            width: 34px;
+            height: 34px;
+            background: var(--primary-gradient);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-pill);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        .btn-back:hover {
+            border-color: var(--primary);
+            transform: translateX(-2px);
+        }
+
+        /* Modern Dark/Light Theme Toggle */
+        .theme-toggle-switch {
+            width: 52px;
+            height: 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-pill);
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .theme-toggle-switch .icon-svg {
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .theme-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] .theme-thumb {
+            transform: translateX(24px);
+        }
+
+        /* Page Header */
+        header {
+            margin-bottom: 32px;
+            text-align: left;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: var(--radius-pill);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            font-size: 0.95rem;
+            color: var(--text-body);
+            line-height: 1.6;
+        }
+
+        /* Content Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            letter-spacing: 0.03em;
+        }
+
+        .badge-stack { background: rgba(99, 102, 241, 0.12); color: var(--primary); border: 1px solid rgba(99, 102, 241, 0.3); }
+        .badge-queue { background: rgba(16, 185, 129, 0.12); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-array { background: rgba(59, 130, 246, 0.12); color: #3B82F6; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+        p.card-desc {
+            font-size: 0.92rem;
+            color: var(--text-body);
+            line-height: 1.65;
+            margin-bottom: 16px;
+        }
+
+        /* ASCII & Pointer Architecture Diagrams */
+        .diagram-box {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 0.84rem;
+            line-height: 1.6;
+            color: var(--text-heading);
+            overflow-x: auto;
+        }
+
+        .accent-hl { color: var(--primary); font-weight: 700; }
+        .accent-q { color: #10B981; font-weight: 700; }
+        .accent-arr { color: #3B82F6; font-weight: 700; }
+
+        /* Code snippets */
+        pre {
+            background: var(--bg-code);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 0.8rem;
+            color: var(--text-code);
+            overflow-x: auto;
+            line-height: 1.55;
+        }
+
+        pre code .fn { color: #38BDF8; font-weight: 600; }
+        pre code .kw { color: #F43F5E; font-weight: 600; }
+        pre code .str { color: #A78BFA; }
+        pre code .com { color: #64748B; font-style: italic; }
+
+        /* Comparison Table */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            background: var(--bg-card);
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 14px;
+            background: var(--bg-card-subtle);
+            color: var(--text-heading);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-body);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .o-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 36px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-footer {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            background: var(--primary-gradient);
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 0.88rem;
+            text-decoration: none;
+            border-radius: var(--radius-pill);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+            transition: all 0.2s ease;
+        }
+        .btn-footer:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+        }
+
+        .footer-note {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 16px 12px 40px; }
+            h1 { font-size: 1.5rem; }
+            header { padding: 20px 16px; }
+            .card { padding: 18px 14px; }
+            .diagram-box { font-size: 0.75rem; padding: 12px 10px; }
+            pre { font-size: 0.72rem; padding: 12px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Top Navigation -->
+        <div class="top-row">
+            <a href="index.html" class="brand-link">
+                <div class="brand-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <span>TaskFlow</span>
+            </a>
+
+            <div class="nav-actions">
+                <a href="index.html" class="btn-back">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back to App
+                </a>
+
+                <!-- Strict Dark / Light Mode Toggle Button -->
+                <button type="button" id="theme-toggle-btn" class="theme-toggle-switch" title="Toggle Light / Dark Theme" aria-label="Toggle theme">
+                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <div class="theme-thumb"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header>
+            <div class="eyebrow">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="12 6 12 12 16 14"></polygon>
+                </svg>
+                Structura Architecture Guide
+            </div>
+            <h1>How Data Structures Power TaskFlow</h1>
+            <p class="subtitle">
+                TaskFlow uses three core data structures to power instant undo history, FIFO task processing, and sequential storage without unnecessary framework overhead.
+            </p>
+        </header>
+
+        <!-- 1. The Stack -->
+        <section class="card">
+            <div class="card-header">
+                <h2>
+                    <span class="card-icon" style="background: rgba(99, 102, 241, 0.12); color: var(--primary);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                    </span>
+                    1. The Stack
+                </h2>
+                <span class="badge badge-stack">LIFO: Last In, First Out</span>
+            </div>
+            <p class="card-desc">
+                Every destructive action (e.g. deleting a task) pushes the complete task snapshot onto an <strong>Action Stack</strong>. Clicking <strong>"Undo (Stack)"</strong> pops the latest item off the top of the stack and restores it to your active list.
+            </p>
+            <div class="diagram-box">
+[ PUSH DELETED TASK ]                  [ POP TO UNDO ]
++---------------------+              +---------------------+
+| Action: "Read book" | &lt;-- <span class="accent-hl">TOP</span>        | Action: "Read book" | --&gt; Restored!
++---------------------+              +---------------------+
+| Action: "Pay bills" |              | Action: "Pay bills" | &lt;-- <span class="accent-hl">NEW TOP</span>
++---------------------+              +---------------------+
+| Action: "Meeting"   |              | Action: "Meeting"   |
++---------------------+              +---------------------+
+            </div>
+            <pre><code><span class="com">/* C Implementation in c/stack.c */</span>
+<span class="kw">int</span> <span class="fn">stack_push</span>(Stack* s, <span class="kw">int</span> val) {
+    <span class="kw">if</span> (s->top >= s->capacity - 1) <span class="kw">return</span> STACK_ERR_OVERFLOW;
+    s->items[++(s->top)] = val;
+    <span class="kw">return</span> STACK_SUCCESS; <span class="com">/* O(1) Time Complexity */</span>
+}
+
+<span class="kw">int</span> <span class="fn">stack_pop</span>(Stack* s, <span class="kw">int</span>* out_val) {
+    <span class="kw">if</span> (s->top &lt; 0) <span class="kw">return</span> STACK_ERR_UNDERFLOW;
+    *out_val = s->items[(s->top)--];
+    <span class="kw">return</span> STACK_SUCCESS; <span class="com">/* O(1) Time Complexity */</span>
+}</code></pre>
+        </section>
+
+        <!-- 2. The Queue -->
+        <section class="card">
+            <div class="card-header">
+                <h2>
+                    <span class="card-icon" style="background: rgba(16, 185, 129, 0.12); color: #10B981;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <line x1="4" y1="6" x2="20" y2="6"></line>
+                            <line x1="4" y1="12" x2="20" y2="12"></line>
+                            <line x1="4" y1="18" x2="20" y2="18"></line>
+                        </svg>
+                    </span>
+                    2. The Queue
+                </h2>
+                <span class="badge badge-queue">FIFO: First In, First Out</span>
+            </div>
+            <p class="card-desc">
+                Tasks arrive sequentially in your daily workflow. When you click <strong>"Process Next (Queue)"</strong>, the oldest pending task at the <strong>FRONT</strong> pointer is marked completed first, maintaining natural FIFO fairness.
+            </p>
+            <div class="diagram-box">
+[ DEQUEUE / PROCESS ]                            [ ENQUEUE NEW TASK ]
+&lt;-- <span class="accent-q">FRONT</span> [ Task #1 ] &lt;-- [ Task #2 ] &lt;-- [ Task #3 ] &lt;-- <span class="accent-q">REAR</span> &lt;-- [ New Task ]
+      (Oldest, executes first)               (Latest, waits in line)
+            </div>
+            <pre><code><span class="com">/* C Implementation in c/queue.c */</span>
+<span class="kw">int</span> <span class="fn">queue_enqueue</span>(Queue* q, <span class="kw">int</span> val) {
+    <span class="kw">if</span> (q->size >= q->capacity) <span class="kw">return</span> QUEUE_ERR_OVERFLOW;
+    q->rear = (q->rear + 1) % q->capacity;
+    q->items[q->rear] = val;
+    q->size++;
+    <span class="kw">return</span> QUEUE_SUCCESS; <span class="com">/* O(1) Circular Buffer */</span>
+}
+
+<span class="kw">int</span> <span class="fn">queue_dequeue</span>(Queue* q, <span class="kw">int</span>* out_val) {
+    <span class="kw">if</span> (q->size == 0) <span class="kw">return</span> QUEUE_ERR_UNDERFLOW;
+    *out_val = q->items[q->front];
+    q->front = (q->front + 1) % q->capacity;
+    q->size--;
+    <span class="kw">return</span> QUEUE_SUCCESS; <span class="com">/* O(1) Time Complexity */</span>
+}</code></pre>
+        </section>
+
+        <!-- 3. Array & Lookup -->
+        <section class="card">
+            <div class="card-header">
+                <h2>
+                    <span class="card-icon" style="background: rgba(59, 130, 246, 0.12); color: #3B82F6;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                    </span>
+                    3. The Contiguous Array
+                </h2>
+                <span class="badge badge-array">Direct Indexing</span>
+            </div>
+            <p class="card-desc">
+                Active tasks are indexed contiguously in memory. Direct index access allows the interactive UI to toggle, edit, or mark tasks as completed in instant O(1) constant time without scanning lists.
+            </p>
+            <div class="diagram-box">
+Index:        [ 0 ]           [ 1 ]           [ 2 ]
+Value:     "Buy Coffee"   "Design Hero"   "Team Sync"
+Address:     0x7FFE00        0x7FFE20        0x7FFE40
+Pointer:     <span class="accent-arr">tasks[0]</span>        <span class="accent-arr">tasks[1]</span>        <span class="accent-arr">tasks[2]</span>
+            </div>
+        </section>
+
+        <!-- Big-O Table -->
+        <section class="card">
+            <div class="card-header">
+                <h2>
+                    <span class="card-icon" style="background: rgba(245, 158, 11, 0.12); color: #F59E0B;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 14 14"></polyline>
+                        </svg>
+                    </span>
+                    Big-O Complexity Summary
+                </h2>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data Structure</th>
+                            <th>Feature in App</th>
+                            <th>Operation</th>
+                            <th>Time Complexity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Stack (LIFO)</strong></td>
+                            <td>Undo Action</td>
+                            <td>Push / Pop</td>
+                            <td><span class="o-badge">O(1)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Queue (FIFO)</strong></td>
+                            <td>Process Next Task</td>
+                            <td>Enqueue / Dequeue</td>
+                            <td><span class="o-badge">O(1)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Array</strong></td>
+                            <td>Task List Rendering</td>
+                            <td>Direct Index Lookup</td>
+                            <td><span class="o-badge">O(1)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer>
+            <a href="index.html" class="btn-footer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Return to TaskFlow App
+            </a>
+            <div class="footer-note">Structura &bull; Educational Data Structures Platform</div>
+        </footer>
+    </div>
+
+    <script>
+        // Synchronized Strict Light / Dark Theme Toggle
+        const themeBtn = document.getElementById('theme-toggle-btn');
+        let currentTheme = localStorage.getItem('taskflow_theme_mode') || 'light';
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('taskflow_theme_mode', theme);
+        }
+
+        applyTheme(currentTheme);
+
+        themeBtn.addEventListener('click', () => {
+            const next = currentTheme === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+        });
+    </script>
+</body>
+</html>

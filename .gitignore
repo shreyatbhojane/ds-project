@@ -1,0 +1,9 @@
+# Build and execution artifacts
+*.exe
+*.o
+*.obj
+.DS_Store
+Thumbs.db
+node_modules/
+.npm-cache/
+npm-debug.log*

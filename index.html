@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow — A Simpler Way to Get Things Done</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================================================
+           TASKFLOW DESIGN SYSTEM — LIGHT & DARK THEME ONLY
+           ========================================================================= */
+        :root {
+            /* Light Theme (Exact match to screenshot) */
+            --bg-page: #F3F4F8;
+            --bg-card: #FFFFFF;
+            --bg-card-subtle: #F8FAFC;
+            --bg-input: #FFFFFF;
+            --border-color: #E2E8F0;
+            --border-hover: #CBD5E1;
+
+            --text-heading: #0F172A;
+            --text-body: #475569;
+            --text-muted: #94A3B8;
+            --text-dim: #A0AEC0;
+
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --primary-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+            --headline-gradient: linear-gradient(135deg, #4F46E5, #8B5CF6);
+
+            --accent-study: #3B82F6;
+            --accent-study-bg: #EFF6FF;
+            --accent-college: #F59E0B;
+            --accent-college-bg: #FEF3C7;
+            --accent-project: #10B981;
+            --accent-project-bg: #ECFDF5;
+            --accent-personal: #EC4899;
+            --accent-personal-bg: #FDF2F8;
+
+            --accent-today: #EF4444;
+            --accent-today-bg: #FEF2F2;
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 12px 30px -4px rgba(79, 70, 229, 0.08), 0 8px 16px -4px rgba(0, 0, 0, 0.04);
+            --shadow-float: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-pill: 9999px;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme (Crisp, modern, rich midnight) */
+            --bg-page: #0B0F19;
+            --bg-card: #131B2E;
+            --bg-card-subtle: #182238;
+            --bg-input: #131B2E;
+            --border-color: #23304A;
+            --border-hover: #334466;
+
+            --text-heading: #F8FAFC;
+            --text-body: #CBD5E1;
+            --text-muted: #94A3B8;
+            --text-dim: #64748B;
+
+            --primary: #6366F1;
+            --primary-hover: #4F46E5;
+            --primary-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+            --headline-gradient: linear-gradient(135deg, #818CF8, #C084FC);
+
+            --accent-study: #60A5FA;
+            --accent-study-bg: rgba(59, 130, 246, 0.15);
+            --accent-college: #FBBF24;
+            --accent-college-bg: rgba(245, 158, 11, 0.15);
+            --accent-project: #34D399;
+            --accent-project-bg: rgba(16, 185, 129, 0.15);
+            --accent-personal: #F472B6;
+            --accent-personal-bg: rgba(236, 72, 153, 0.15);
+
+            --accent-today: #F87171;
+            --accent-today-bg: rgba(239, 68, 68, 0.15);
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 12px 30px -4px rgba(0, 0, 0, 0.5);
+            --shadow-float: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            min-height: 100vh;
+            padding: 24px 20px 60px;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 10% 90%, rgba(236, 72, 153, 0.03) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        /* =========================================================================
+           HEADER / NAVBAR
+           ========================================================================= */
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0 28px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-heading);
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #6366F1, #3B82F6);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: var(--text-body);
+            font-size: 0.92rem;
+            font-weight: 600;
+            position: relative;
+            padding: 6px 0;
+            transition: color 0.15s;
+        }
+
+        .nav-item a:hover {
+            color: var(--text-heading);
+        }
+
+        .nav-item.active a {
+            color: var(--text-heading);
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--text-heading);
+            border-radius: var(--radius-pill);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Dark / Light Toggle Switch (as shown in screenshot) */
+        .theme-switch-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-pill);
+            padding: 4px;
+            width: 58px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .theme-thumb {
+            width: 22px;
+            height: 22px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-heading);
+            position: absolute;
+            left: 4px;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] .theme-thumb {
+            transform: translateX(28px);
+            background: #23304A;
+        }
+
+        .nav-cta-btn {
+            background: #0F172A;
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-pill);
+            padding: 10px 20px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.15s, opacity 0.15s;
+        }
+
+        [data-theme="dark"] .nav-cta-btn {
+            background: #6366F1;
+        }
+
+        .nav-cta-btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.95;
+        }
+
+        /* =========================================================================
+           HERO SECTION (2-COLUMN EDITORIAL HERO)
+           ========================================================================= */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1fr 1.15fr;
+            gap: 48px;
+            align-items: center;
+            padding: 24px 0 54px;
+            position: relative;
+        }
+
+        .hero-left {
+            max-width: 480px;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #6366F1;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.18);
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            margin-bottom: 20px;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-headline {
+            font-size: 3.4rem;
+            font-weight: 800;
+            line-height: 1.12;
+            letter-spacing: -0.03em;
+            color: var(--text-heading);
+            margin-bottom: 18px;
+        }
+
+        .hero-headline .text-gradient {
+            background: var(--headline-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--text-body);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .btn-hero-primary {
+            background: #0F172A;
+            color: #FFFFFF;
+            padding: 14px 26px;
+            border-radius: var(--radius-pill);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+            border: none;
+            cursor: pointer;
+            transition: transform 0.15s, opacity 0.15s;
+        }
+
+        [data-theme="dark"] .btn-hero-primary {
+            background: #6366F1;
+            box-shadow: 0 4px 18px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-hero-secondary {
+            background: var(--bg-card);
+            color: var(--text-heading);
+            border: 1px solid var(--border-color);
+            padding: 14px 24px;
+            border-radius: var(--radius-pill);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.15s, background-color 0.15s;
+        }
+
+        .btn-hero-secondary:hover {
+            background: var(--bg-card-subtle);
+            transform: translateY(-2px);
+        }
+
+        /* 3 Hero Features Row */
+        .hero-features-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .hero-feat-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .feat-icon-wrap {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .icon-feat-1 { background: rgba(99, 102, 241, 0.12); color: #6366F1; }
+        .icon-feat-2 { background: rgba(59, 130, 246, 0.12); color: #3B82F6; }
+        .icon-feat-3 { background: rgba(16, 185, 129, 0.12); color: #10B981; }
+
+        .feat-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 2px;
+        }
+
+        .feat-desc {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            line-height: 1.35;
+        }
+
+        /* =========================================================================
+           HERO RIGHT — MOCKUP CARD PREVIEW (Exact match to illustration)
+           ========================================================================= */
+        .hero-right-stage {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mockup-main-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px 26px;
+            width: 100%;
+            max-width: 490px;
+            box-shadow: var(--shadow-float);
+            position: relative;
+            z-index: 2;
+        }
+
+        .mockup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .mockup-title-grp h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-heading);
+        }
+
+        .mockup-title-grp span {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .mockup-add-pill {
+            background: #4F46E5;
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-pill);
+            padding: 6px 14px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+        }
+
+        .mockup-progress-wrap {
+            margin-bottom: 16px;
+        }
+
+        .mockup-progress-bar {
+            height: 6px;
+            background: var(--bg-card-subtle);
+            border-radius: var(--radius-pill);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .mockup-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366F1, #3B82F6);
+            border-radius: var(--radius-pill);
+            width: 60%;
+        }
+
+        .mockup-filter-pills {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .m-pill {
+            border: none;
+            border-radius: var(--radius-pill);
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: var(--bg-card-subtle);
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .m-pill.active {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        .mockup-tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .m-task-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.82rem;
+        }
+
+        .m-task-row:last-child {
+            border-bottom: none;
+        }
+
+        .m-task-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-heading);
+            font-weight: 500;
+        }
+
+        .m-task-check {
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .m-task-check.checked {
+            background: #3B82F6;
+            border-color: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        .m-task-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag-pill {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .tag-study { background: var(--accent-study-bg); color: var(--accent-study); }
+        .tag-college { background: var(--accent-college-bg); color: var(--accent-college); }
+        .tag-project { background: var(--accent-project-bg); color: var(--accent-project); }
+        .tag-personal { background: var(--accent-personal-bg); color: var(--accent-personal); }
+
+        .date-label {
+            font-size: 0.72rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+        }
+
+        .date-label.is-today {
+            color: var(--accent-today);
+            font-weight: 600;
+        }
+
+        /* Floating Circular Progress Mini-Card */
+        .floating-stat-card {
+            position: absolute;
+            bottom: -24px;
+            right: -14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+            z-index: 3;
+            animation: floatUpDown 4s ease-in-out infinite;
+        }
+
+        @keyframes floatUpDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .f-stat-text .f-title {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .f-stat-text .f-count {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-heading);
+        }
+
+        .f-stat-text .f-sub {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+        }
+
+        .circular-chart {
+            width: 44px;
+            height: 44px;
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: var(--bg-card-subtle);
+            stroke-width: 4;
+        }
+
+        .circle-val {
+            fill: none;
+            stroke: #3B82F6;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 40;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* =========================================================================
+           INTERACTIVE WORKSPACE — INPUT BAR
+           ========================================================================= */
+        .workspace-section {
+            margin-top: 10px;
+        }
+
+        .input-bar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 28px;
+        }
+
+        .input-circle-icon {
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+        }
+
+        .task-main-input {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 0.95rem;
+            color: var(--text-heading);
+            outline: none;
+            padding: 6px 0;
+        }
+
+        .task-main-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .dropdown-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-pill);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .dropdown-pill select {
+            border: none;
+            background: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .dropdown-pill select option {
+            background: var(--bg-card);
+            color: var(--text-heading);
+        }
+
+        .category-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-personal);
+        }
+
+        .btn-add-primary {
+            background: #4F46E5;
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 10px 22px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+            transition: transform 0.15s, background-color 0.15s;
+        }
+
+        .btn-add-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* =========================================================================
+           TASKS WORKSPACE GRID (2 COLUMNS: LIST + SIDEBAR)
+           ========================================================================= */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr;
+            gap: 28px;
+            align-items: flex-start;
+        }
+
+        /* Left Column: Your Tasks Card */
+        .tasks-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tasks-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tasks-card-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            letter-spacing: -0.02em;
+        }
+
+        .search-filter-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 12px;
+            color: var(--text-muted);
+        }
+
+        .search-box input {
+            padding: 8px 12px 8px 34px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-pill);
+            background: var(--bg-card-subtle);
+            font-size: 0.82rem;
+            color: var(--text-heading);
+            outline: none;
+            width: 170px;
+            transition: width 0.2s, border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            width: 210px;
+            border-color: #6366F1;
+        }
+
+        .filter-icon-btn {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-body);
+            cursor: pointer;
+        }
+
+        /* Active Tasks List */
+        .main-task-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-row-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.15s ease;
+        }
+
+        .task-row-item:hover {
+            border-color: #CBD5E1;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .task-row-item.is-done {
+            opacity: 0.6;
+            background: var(--bg-card-subtle);
+        }
+
+        .task-row-item.is-done .t-title {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .t-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+        }
+
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            color: #FFFFFF;
+            transition: all 0.15s;
+        }
+
+        .checkbox-custom.checked {
+            background: #3B82F6;
+            border-color: #3B82F6;
+        }
+
+        .t-title {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            word-break: break-word;
+        }
+
+        .t-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .action-icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            border-radius: 4px;
+            transition: color 0.15s;
+        }
+
+        .action-icon-btn:hover {
+            color: var(--text-heading);
+        }
+
+        .action-icon-btn.delete-btn:hover {
+            color: #EF4444;
+        }
+
+        /* DS Control Toolbar on Tasks Card */
+        .ds-action-strip {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .ds-btn-small {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-pill);
+            padding: 5px 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .ds-btn-small:hover:not(:disabled) {
+            border-color: #6366F1;
+            color: #6366F1;
+        }
+
+        .ds-btn-small:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Right Column: Sidebar (Overview & Categories) */
+        .sidebar-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sidebar-card h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            margin-bottom: 16px;
+        }
+
+        /* Task Overview Metrics (Exact from screenshot) */
+        .overview-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .metric-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 4px;
+        }
+
+        .metric-icon-num {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            margin-bottom: 2px;
+        }
+
+        .icon-blue { color: #3B82F6; }
+        .icon-green { color: #10B981; }
+        .icon-orange { color: #F59E0B; }
+
+        .metric-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Categories List */
+        .categories-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            color: var(--text-heading);
+            font-weight: 600;
+            padding: 4px 0;
+            cursor: pointer;
+        }
+
+        .category-row:hover {
+            color: #6366F1;
+        }
+
+        .cat-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cat-count {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* Mobile Bottom Nav Bar (From Mobile Mockup in Screenshot) */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 10px 24px;
+            z-index: 100;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .bottom-nav-item.active {
+            color: #4F46E5;
+        }
+
+        /* Toast Feedback */
+        .toast-msg {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text-heading);
+            color: var(--bg-card);
+            padding: 10px 22px;
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+        }
+
+        .toast-msg.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* =========================================================================
+           RESPONSIVE MOBILE BREAKPOINTS (Exact match to mobile mockup)
+           ========================================================================= */
+        @media (max-width: 960px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            .hero-left {
+                max-width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .hero-cta-group {
+                justify-content: center;
+            }
+            .hero-features-row {
+                justify-content: center;
+                text-align: left;
+            }
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px 14px 80px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .hero-headline {
+                font-size: 2.35rem;
+            }
+            .hero-features-row {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .input-bar-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .dropdown-pill {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .btn-add-primary {
+                width: 100%;
+            }
+            .floating-stat-card {
+                display: none;
+            }
+            .mobile-bottom-nav {
+                display: flex;
+            }
+            .mockup-main-card {
+                padding: 18px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Site Header / Navbar -->
+        <header class="site-header">
+            <a href="index.html" class="brand-logo" aria-label="TaskFlow Home">
+                <div class="brand-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <span>TaskFlow</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item active"><a href="index.html">Home</a></li>
+                <li class="nav-item"><a href="#tasks-section">Features</a></li>
+                <li class="nav-item"><a href="how-ds-works.html">About &amp; DS</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <!-- Dark / Light Theme Toggle Switch -->
+                <button id="theme-toggle-btn" class="theme-switch-btn" aria-label="Toggle Dark and Light Mode" title="Toggle Theme">
+                    <div class="theme-thumb">
+                        <!-- Sun Icon (Light Mode) -->
+                        <svg class="icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </div>
+                </button>
+
+                <a href="#input-bar-anchor" class="nav-cta-btn">
+                    <span>+ Add Task</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- =========================================================================
+             HERO SECTION (Exact match to illustration)
+             ========================================================================= -->
+        <section class="hero-section">
+            <!-- Left Hero Content -->
+            <div class="hero-left">
+                <div class="hero-tag">
+                    <span>Organize &bull; Focus &bull; Achieve</span>
+                </div>
+                <h1 class="hero-headline">
+                    A Simpler<br>
+                    Way to Get<br>
+                    <span class="text-gradient">Things Done</span>
+                </h1>
+                <p class="hero-desc">
+                    A minimal and powerful to-do list to help you stay organized, focus on what matters, and turn your plans into progress.
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="#input-bar-anchor" class="btn-hero-primary">
+                        <span>Start Adding Tasks</span>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                    <a href="how-ds-works.html" class="btn-hero-secondary">
+                        Learn More
+                    </a>
+                </div>
+
+                <div class="hero-features-row">
+                    <div class="hero-feat-item">
+                        <div class="feat-icon-wrap icon-feat-1">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="feat-title">Easy to Use</div>
+                            <div class="feat-desc">Clean and intuitive interface</div>
+                        </div>
+                    </div>
+
+                    <div class="hero-feat-item">
+                        <div class="feat-icon-wrap icon-feat-2">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="feat-title">Stay Focused</div>
+                            <div class="feat-desc">Manage your tasks effortlessly</div>
+                        </div>
+                    </div>
+
+                    <div class="hero-feat-item">
+                        <div class="feat-icon-wrap icon-feat-3">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="feat-title">Track Progress</div>
+                            <div class="feat-desc">See your productivity grow</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Hero Card Mockup (Exact layout & floating badge from image) -->
+            <div class="hero-right-stage">
+                <div class="mockup-main-card">
+                    <div class="mockup-header">
+                        <div class="mockup-title-grp">
+                            <h3>My Tasks</h3>
+                            <span id="hero-progress-label">3 of 5 completed</span>
+                        </div>
+                        <button class="mockup-add-pill" onclick="document.getElementById('task-main-input').focus()">+ Add Task</button>
+                    </div>
+
+                    <div class="mockup-progress-wrap">
+                        <div class="mockup-progress-bar">
+                            <div class="mockup-progress-fill" id="hero-progress-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="mockup-filter-pills">
+                        <button class="m-pill active" data-filter="all">All (5)</button>
+                        <button class="m-pill" data-filter="active">Active (2)</button>
+                        <button class="m-pill" data-filter="completed">Completed (3)</button>
+                    </div>
+
+                    <!-- Static Sample Rows Preview -->
+                    <div class="mockup-tasks-list">
+                        <div class="m-task-row">
+                            <div class="m-task-left">
+                                <div class="m-task-check checked">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+                                <span>Complete data structure assignment</span>
+                            </div>
+                            <div class="m-task-meta">
+                                <span class="tag-pill tag-study">Study</span>
+                                <span class="date-label is-today">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    Today
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="m-task-row">
+                            <div class="m-task-left">
+                                <div class="m-task-check"></div>
+                                <span>Prepare project report</span>
+                            </div>
+                            <div class="m-task-meta">
+                                <span class="tag-pill tag-college">College</span>
+                                <span class="date-label">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    Tomorrow
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="m-task-row">
+                            <div class="m-task-left">
+                                <div class="m-task-check checked">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+                                <span>Read Java OOP notes</span>
+                            </div>
+                            <div class="m-task-meta">
+                                <span class="tag-pill tag-study">Study</span>
+                                <span class="date-label is-today">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    Today
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Circular Gauge Badge (Bottom Right of Mockup) -->
+                <div class="floating-stat-card">
+                    <div class="f-stat-text">
+                        <div class="f-title">Today</div>
+                        <div class="f-count" id="float-stat-ratio">3 / 5</div>
+                        <div class="f-sub">Tasks completed</div>
+                    </div>
+                    <svg class="circular-chart" viewBox="0 0 36 36">
+                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path class="circle-val" id="float-circle-svg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================================
+           INTERACTIVE WORKSPACE — INPUT BAR
+           ========================================================================= -->
+        <section class="workspace-section" id="input-bar-anchor">
+            <form id="task-add-form" class="input-bar-card">
+                <div class="input-circle-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="9"></circle>
+                    </svg>
+                </div>
+                <input type="text" id="task-main-input" class="task-main-input" placeholder="What do you want to do?" autocomplete="off" required>
+
+                <!-- Category Dropdown Pill -->
+                <div class="dropdown-pill">
+                    <span class="category-dot" id="cat-indicator-dot"></span>
+                    <select id="task-cat-select" aria-label="Task Category">
+                        <option value="Personal">Personal</option>
+                        <option value="Study">Study</option>
+                        <option value="College">College</option>
+                        <option value="Project">Project</option>
+                    </select>
+                </div>
+
+                <!-- Due Date Dropdown Pill -->
+                <div class="dropdown-pill">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <select id="task-date-select" aria-label="Due Date">
+                        <option value="Today">Today</option>
+                        <option value="Tomorrow">Tomorrow</option>
+                        <option value="Next Week">Next Week</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-add-primary">Add Task</button>
+            </form>
+
+            <!-- =========================================================================
+                 TASKS WORKSPACE GRID (2 COLUMNS: YOUR TASKS + SIDEBAR)
+                 ========================================================================= -->
+            <div class="workspace-grid" id="tasks-section">
+                <!-- Left Column: Tasks List -->
+                <div class="tasks-card">
+                    <div class="tasks-card-header">
+                        <h2>Your Tasks</h2>
+                        <div class="search-filter-wrap">
+                            <div class="search-box">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <input type="text" id="task-search" placeholder="Search tasks..." autocomplete="off">
+                            </div>
+                            <button class="filter-icon-btn" id="btn-toggle-sort" title="Toggle Sort Order" aria-label="Sort tasks">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                                    <line x1="7" y1="12" x2="17" y2="12"></line>
+                                    <line x1="10" y1="18" x2="14" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Main Dynamic Tasks List -->
+                    <ul class="main-task-list" id="main-task-list"></ul>
+
+                    <!-- Data Structure Actions Bar (Stack & Queue Integration) -->
+                    <div class="ds-action-strip">
+                        <span>Data Structure Controls:</span>
+                        <div style="display:flex; gap:8px;">
+                            <button id="btn-ds-undo" class="ds-btn-small" disabled title="Revert last task operation via LIFO Stack">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                                Undo (Stack)
+                            </button>
+                            <button id="btn-ds-process" class="ds-btn-small" disabled title="Execute next pending task in arrival order via FIFO Queue">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                Process Next (Queue)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Sidebar (Task Overview & Categories) -->
+                <div class="sidebar-col">
+                    <!-- Task Overview Card -->
+                    <div class="sidebar-card">
+                        <h3>Task Overview</h3>
+                        <div class="overview-metrics-grid">
+                            <div class="metric-cell">
+                                <div class="metric-icon-num">
+                                    <svg class="icon-blue" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                    <span id="metric-total">5</span>
+                                </div>
+                                <span class="metric-label">Total Tasks</span>
+                            </div>
+
+                            <div class="metric-cell">
+                                <div class="metric-icon-num">
+                                    <svg class="icon-green" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    <span id="metric-completed">3</span>
+                                </div>
+                                <span class="metric-label">Completed</span>
+                            </div>
+
+                            <div class="metric-cell">
+                                <div class="metric-icon-num">
+                                    <svg class="icon-orange" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    <span id="metric-pending">2</span>
+                                </div>
+                                <span class="metric-label">Pending</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories Card -->
+                    <div class="sidebar-card">
+                        <h3>Categories</h3>
+                        <ul class="categories-list" id="category-summary-list">
+                            <li class="category-row" data-cat="Study">
+                                <div class="cat-left">
+                                    <span class="category-dot" style="background:#3B82F6;"></span>
+                                    <span>Study</span>
+                                </div>
+                                <span class="cat-count" id="count-cat-study">2</span>
+                            </li>
+                            <li class="category-row" data-cat="College">
+                                <div class="cat-left">
+                                    <span class="category-dot" style="background:#F59E0B;"></span>
+                                    <span>College</span>
+                                </div>
+                                <span class="cat-count" id="count-cat-college">1</span>
+                            </li>
+                            <li class="category-row" data-cat="Project">
+                                <div class="cat-left">
+                                    <span class="category-dot" style="background:#10B981;"></span>
+                                    <span>Project</span>
+                                </div>
+                                <span class="cat-count" id="count-cat-project">1</span>
+                            </li>
+                            <li class="category-row" data-cat="Personal">
+                                <div class="cat-left">
+                                    <span class="category-dot" style="background:#EC4899;"></span>
+                                    <span>Personal</span>
+                                </div>
+                                <span class="cat-count" id="count-cat-personal">1</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Toast Feedback -->
+        <div class="toast-msg" id="toast-msg"></div>
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar (as pictured in mobile mockup) -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="bottom-nav-item active">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Home</span>
+        </a>
+        <a href="#tasks-section" class="bottom-nav-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <span>Tasks</span>
+        </a>
+        <a href="how-ds-works.html" class="bottom-nav-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Stats</span>
+        </a>
+        <button id="mobile-theme-btn" class="bottom-nav-item" style="background:none; border:none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Theme</span>
+        </button>
+    </nav>
+
+    <script>
+        /* =========================================================================
+           TASKFLOW CLIENT LOGIC — DATA STRUCTURES & THEME (LIGHT / DARK ONLY)
+           ========================================================================= */
+
+        // 1. Data Structures: Stack (LIFO for Undo) & Queue (FIFO for Execution)
+        class Stack {
+            constructor() { this.items = []; }
+            push(item) { this.items.push(item); }
+            pop() { return this.items.pop(); }
+            isEmpty() { return this.items.length === 0; }
+            size() { return this.items.length; }
+        }
+
+        class Queue {
+            constructor() { this.items = []; }
+            enqueue(item) { this.items.push(item); }
+            dequeue() { return this.items.shift(); }
+            isEmpty() { return this.items.length === 0; }
+            size() { return this.items.length; }
+        }
+
+        // 2. Initial Sample Tasks (Exactly matching the screenshot)
+        const DEFAULT_TASKS = [
+            { id: '1', title: 'Complete data structure assignment', category: 'Study', date: 'Today', completed: true },
+            { id: '2', title: 'Prepare project report', category: 'College', date: 'Tomorrow', completed: false },
+            { id: '3', title: 'Read Java OOP notes', category: 'Study', date: 'Today', completed: true },
+            { id: '4', title: 'Build to-do list website', category: 'Project', date: 'Tomorrow', completed: false },
+            { id: '5', title: 'Plan for next week', category: 'Personal', date: 'Sun, 25 May', completed: false }
+        ];
+
+        let tasks = JSON.parse(localStorage.getItem('taskflow_clean_tasks')) || DEFAULT_TASKS;
+        const undoStack = new Stack();
+        const executionQueue = new Queue();
+
+        let activeFilter = 'all';
+        let searchQuery = '';
+
+        // 3. Theme Toggle (Light & Dark Only)
+        const themeBtn = document.getElementById('theme-toggle-btn');
+        const mobileThemeBtn = document.getElementById('mobile-theme-btn');
+        let currentTheme = localStorage.getItem('taskflow_theme_mode') || 'light';
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('taskflow_theme_mode', theme);
+        }
+        applyTheme(currentTheme);
+
+        function toggleTheme() {
+            const next = currentTheme === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+            showToast(`Switched to ${next === 'dark' ? 'Dark' : 'Light'} Mode`);
+        }
+
+        themeBtn.addEventListener('click', toggleTheme);
+        mobileThemeBtn?.addEventListener('click', toggleTheme);
+
+        // 4. Dot indicator update on category selection
+        const catSelect = document.getElementById('task-cat-select');
+        const catDot = document.getElementById('cat-indicator-dot');
+        const catColors = {
+            'Personal': '#EC4899',
+            'Study': '#3B82F6',
+            'College': '#F59E0B',
+            'Project': '#10B981'
+        };
+
+        catSelect.addEventListener('change', (e) => {
+            catDot.style.background = catColors[e.target.value] || '#EC4899';
+        });
+
+        // 5. Toast Feedback
+        function showToast(text) {
+            const el = document.getElementById('toast-msg');
+            el.textContent = text;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2200);
+        }
+
+        // 6. Refresh Queue & State
+        function syncState() {
+            executionQueue.items = [];
+            tasks.filter(t => !t.completed).forEach(t => executionQueue.enqueue(t));
+
+            localStorage.setItem('taskflow_clean_tasks', JSON.stringify(tasks));
+            render();
+            updateMetrics();
+        }
+
+        function updateMetrics() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const pending = total - completed;
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            // Overview counts
+            document.getElementById('metric-total').textContent = total;
+            document.getElementById('metric-completed').textContent = completed;
+            document.getElementById('metric-pending').textContent = pending;
+
+            // Hero mockup counts
+            const heroLabel = document.getElementById('hero-progress-label');
+            if (heroLabel) heroLabel.textContent = `${completed} of ${total} completed`;
+
+            const heroBar = document.getElementById('hero-progress-bar');
+            if (heroBar) heroBar.style.width = `${percent}%`;
+
+            const floatRatio = document.getElementById('float-stat-ratio');
+            if (floatRatio) floatRatio.textContent = `${completed} / ${total}`;
+
+            const circleSvg = document.getElementById('float-circle-svg');
+            if (circleSvg) {
+                // Circumference is approx 100, offset = 100 - percent
+                circleSvg.style.strokeDashoffset = 100 - percent;
+            }
+
+            // Category counts
+            document.getElementById('count-cat-study').textContent = tasks.filter(t => t.category === 'Study').length;
+            document.getElementById('count-cat-college').textContent = tasks.filter(t => t.category === 'College').length;
+            document.getElementById('count-cat-project').textContent = tasks.filter(t => t.category === 'Project').length;
+            document.getElementById('count-cat-personal').textContent = tasks.filter(t => t.category === 'Personal').length;
+
+            // DS buttons state
+            document.getElementById('btn-ds-undo').disabled = undoStack.isEmpty();
+            document.getElementById('btn-ds-process').disabled = executionQueue.isEmpty();
+        }
+
+        // 7. Render Task Rows
+        function render() {
+            const list = document.getElementById('main-task-list');
+            list.innerHTML = '';
+
+            let filtered = tasks;
+            if (activeFilter === 'active') filtered = tasks.filter(t => !t.completed);
+            if (activeFilter === 'completed') filtered = tasks.filter(t => t.completed);
+
+            if (searchQuery.trim() !== '') {
+                const q = searchQuery.toLowerCase();
+                filtered = filtered.filter(t => t.title.toLowerCase().includes(q));
+            }
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<li style="text-align:center; padding:32px 0; color:var(--text-muted); font-size:0.9rem;">No tasks match your criteria.</li>`;
+                return;
+            }
+
+            filtered.forEach(task => {
+                const li = document.createElement('li');
+                li.className = `task-row-item ${task.completed ? 'is-done' : ''}`;
+
+                const tagClass = `tag-${(task.category || 'personal').toLowerCase()}`;
+                const isToday = task.date === 'Today';
+
+                li.innerHTML = `
+                    <div class="t-left">
+                        <button class="checkbox-custom ${task.completed ? 'checked' : ''}" aria-label="Toggle task">
+                            ${task.completed ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"></polyline></svg>` : ''}
+                        </button>
+                        <span class="t-title">${escapeHtml(task.title)}</span>
+                    </div>
+
+                    <div class="t-right">
+                        <span class="tag-pill ${tagClass}">${task.category}</span>
+                        <span class="date-label ${isToday ? 'is-today' : ''}">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            ${task.date}
+                        </span>
+                        <button class="action-icon-btn edit-btn" title="Edit task title" aria-label="Edit task">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                        <button class="action-icon-btn delete-btn" title="Delete task" aria-label="Delete task">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+
+                // Toggle click
+                li.querySelector('.checkbox-custom').addEventListener('click', () => toggleTask(task.id));
+
+                // Delete click
+                li.querySelector('.delete-btn').addEventListener('click', () => deleteTask(task.id));
+
+                // Edit click
+                li.querySelector('.edit-btn').addEventListener('click', () => {
+                    const newTitle = prompt('Edit task description:', task.title);
+                    if (newTitle && newTitle.trim()) {
+                        const prev = task.title;
+                        task.title = newTitle.trim();
+                        undoStack.push({ type: 'EDIT', id: task.id, prev });
+                        showToast('Task updated');
+                        syncState();
+                    }
+                });
+
+                list.appendChild(li);
+            });
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // 8. Task Actions
+        function addTask(title, category, date) {
+            const newTask = {
+                id: Date.now().toString(),
+                title: title.trim(),
+                category: category || 'Personal',
+                date: date || 'Today',
+                completed: false
+            };
+            tasks.unshift(newTask);
+            undoStack.push({ type: 'ADD', task: newTask });
+            showToast(`Added: "${newTask.title}"`);
+            syncState();
+        }
+
+        function toggleTask(id) {
+            const t = tasks.find(item => item.id === id);
+            if (!t) return;
+            t.completed = !t.completed;
+            undoStack.push({ type: 'TOGGLE', id, prev: !t.completed });
+            showToast(t.completed ? `Completed: "${t.title}"` : `Reopened: "${t.title}"`);
+            syncState();
+        }
+
+        function deleteTask(id) {
+            const idx = tasks.findIndex(item => item.id === id);
+            if (idx === -1) return;
+            const removed = tasks.splice(idx, 1)[0];
+            undoStack.push({ type: 'DELETE', task: removed, idx });
+            showToast(`Deleted: "${removed.title}" (Undo available)`);
+            syncState();
+        }
+
+        // Stack: Undo Operation (LIFO)
+        function undoAction() {
+            if (undoStack.isEmpty()) return;
+            const act = undoStack.pop();
+
+            if (act.type === 'ADD') {
+                tasks = tasks.filter(t => t.id !== act.task.id);
+                showToast(`Undo: Removed added task`);
+            } else if (act.type === 'DELETE') {
+                tasks.splice(act.idx, 0, act.task);
+                showToast(`Undo: Restored deleted task`);
+            } else if (act.type === 'TOGGLE') {
+                const t = tasks.find(item => item.id === act.id);
+                if (t) {
+                    t.completed = act.prev;
+                    showToast(`Undo: Reverted status`);
+                }
+            } else if (act.type === 'EDIT') {
+                const t = tasks.find(item => item.id === act.id);
+                if (t) {
+                    t.title = act.prev;
+                    showToast(`Undo: Reverted title edit`);
+                }
+            }
+            syncState();
+        }
+
+        // Queue: Process Next (FIFO)
+        function processNextTask() {
+            if (executionQueue.isEmpty()) return;
+            const next = executionQueue.dequeue();
+            const t = tasks.find(item => item.id === next.id);
+            if (t && !t.completed) {
+                t.completed = true;
+                undoStack.push({ type: 'TOGGLE', id: t.id, prev: false });
+                showToast(`FIFO Queue: Processed "${t.title}"`);
+                syncState();
+            }
+        }
+
+        // 9. Event Listeners
+        document.getElementById('task-add-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('task-main-input');
+            const cat = document.getElementById('task-cat-select').value;
+            const date = document.getElementById('task-date-select').value;
+
+            if (input.value.trim()) {
+                addTask(input.value, cat, date);
+                input.value = '';
+            }
+        });
+
+        document.getElementById('btn-ds-undo').addEventListener('click', undoAction);
+        document.getElementById('btn-ds-process').addEventListener('click', processNextTask);
+
+        // Filter pills click
+        document.querySelectorAll('.m-pill').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.m-pill').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.getAttribute('data-filter');
+                render();
+            });
+        });
+
+        // Search box input
+        document.getElementById('task-search').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            render();
+        });
+
+        // Category filter click in sidebar
+        document.querySelectorAll('.category-row').forEach(row => {
+            row.addEventListener('click', () => {
+                const cat = row.getAttribute('data-cat');
+                const searchInput = document.getElementById('task-search');
+                if (searchInput.value === cat) {
+                    searchInput.value = '';
+                    searchQuery = '';
+                } else {
+                    searchInput.value = cat;
+                    searchQuery = cat;
+                }
+                render();
+            });
+        });
+
+        // Toggle sort order
+        let sortDesc = true;
+        document.getElementById('btn-toggle-sort').addEventListener('click', () => {
+            tasks.reverse();
+            sortDesc = !sortDesc;
+            showToast(`Sorted ${sortDesc ? 'newest first' : 'oldest first'}`);
+            render();
+        });
+
+        // Initial setup
+        syncState();
+    </script>
+</body>
+</html>
